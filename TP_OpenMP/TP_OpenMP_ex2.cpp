@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
     omp_set_num_threads(3);
     
 		std::cout << omp_get_num_threads() << std::endl;
-		#pragma omp parallel for 
+		#pragma omp parallel for schedule(static, 50)
 		for (int x=0; x<width; x++)
 		{
 			for (int y=0; y<height; y++)
