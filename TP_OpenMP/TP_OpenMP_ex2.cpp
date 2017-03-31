@@ -34,25 +34,33 @@ int main(int argc, char ** argv)
     auto ind = [&data,width](int xx, int yy)->unsigned char& 
     { return data[yy*width+xx]; };
 
-    // start chrono
+    // start chrono 
     double startTime = omp_get_wtime();
 
     // compute image data
     // TODO
-    for (int x=0; x<width; x++)
-    {
-        for (int y=0; y<height; y++)
-        {
-            // diagonal gradient
-            // TODO remove that
-            double t = (x+y) / sqrt(width*width + height*height);
-            double f = 2.0;
-            ind(x,y) = 127.0 * (1 + cos(2.0*M_PI*f*t));
+   
+    omp_set_num_threads(3);
+    
+		std::cout << omp_get_num_threads() << std::endl;
+		#pragma omp parallel for 
+		for (int x=0; x<width; x++)
+		{
+			for (int y=0; y<height; y++)
+			{
+				// diagonal gradient
+				// TODO remove that
+				//double t = (x+y) / sqrt(width*width + height*height);
+				//t = (x+y)/10000;
+				//double f = 2.0;
+				
 
-            // put the color of the thread
-            // TODO
-        }
-    }
+				// put the color of the thread
+				// TODO
+				double c = omp_get_thread_num() * (255/(omp_get_num_threads()-1));
+				ind(x,y) = c;
+			}
+		}
 
     // stop chrono
     double endTime = omp_get_wtime();
