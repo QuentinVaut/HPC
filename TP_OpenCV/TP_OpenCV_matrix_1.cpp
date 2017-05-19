@@ -4,8 +4,12 @@
 int main()
 {
 
-    cv::Mat M = (cv::Mat_<float>(2, 3) << 1, 2, 3, 4, 5, 6);
-    std::cout << "---- M ----\n" << M << std::endl;
+    cv::Mat M = (cv::Mat_<float>(3, 3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);
+    cv::Mat U = (cv::Mat_<float>(3, 1) << 1, 2, 3);
+    cv::Mat V = (cv::Mat_<float>(3, 1) << 1, 1, 1);//Nb Line, Nb colonne
+    cv::Mat V3 = M * V; 
+    
+    std::cout << "---- M ----\n" << V3 << std::endl;
 
     // TODO
 

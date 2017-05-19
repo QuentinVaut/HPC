@@ -2,7 +2,7 @@
 NB_THREAD=10
 STEP=0.000001
 DAT_FILE=ex2.dat
-OUT_FILE=./TP_MPI_ex2d.out
+OUT_FILE=./TP_MPI_ex2b.out
 EPS_FILE=ex2_scalability.eps
 
 if [ -f $DAT_FILE ]

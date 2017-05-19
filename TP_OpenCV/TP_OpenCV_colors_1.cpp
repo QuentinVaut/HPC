@@ -30,12 +30,33 @@ int main(int argc, char ** argv)
 
     // foreach loop
     // TODO
+    timePoint_t tpForEach0 = now();
+    
+    auto f = [COEF] (cv::Vec3b &color, const int *) {
+		color[0] *= COEF;
+		color[1] *= COEF;
+		color[2] *= COEF;
+	};
+    cv::Mat imgForeach = imgInput.clone();
+    imgForeach.forEach<cv::Vec3b>(f);
+    timePoint_t tpForEach1 = now();
+    
 
     // 2D loop
     // TODO
+    timePoint_t tpLoop0 = now();
+    cv::Mat imgLoop = imgInput.clone();
+    for(int i=0;i < imgLoop.rows;i++) {
+		for(int j=0;j < imgLoop.cols;j++) {
+			imgLoop.at<cv::Vec3b>(i, j) = imgLoop.at<cv::Vec3b>(i, j) * COEF;
+		}
+	}
+	timePoint_t tpLoop1 = now();
 
     // print computation times
     std::cout << "imgMul: " << duration(tpMul0, tpMul1) << " s\n";
+    std::cout << "imgLoop: " << duration(tpLoop0, tpLoop1) << " s\n";
+    std::cout << "imgForEach: " << duration(tpForEach0, tpForEach1) << " s\n";
     // TODO
 
     // write image files
