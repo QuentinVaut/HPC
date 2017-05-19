@@ -37,9 +37,33 @@ int main(int argc, char ** argv)
     opencHelp::Chrono chrono;
 
     // compute
+    /*
 #pragma omp parallel for
     for (int i=0; i<dataSize; i++)
-        dataZ[i] = dataAlpha * dataX[i] + dataY[i];
+        dataZ[i] = dataAlpha * dataX[i] + dataY[i];*/
+        
+    // create and write buffers
+	int dataFullSize = dataSize*sizeof(float);
+	cl::Buffer inputBuffer(context, CL_MEM_READ_ONLY, dataFullSize);
+	cl::Buffer outputBuffer(context, CL_MEM_WRITE_ONLY, dataFullSize);
+	queue.enqueueWriteBuffer(inputBuffer, false, 0, dataFullSize, inputData.data());   
+        
+	// create and build program
+	std::string kernelSource = opencHelp::readKernelFile("ex1.cl");
+	cl::Program program = cl::Program(context, kernelSource, true);
+	
+	// setup and launch kernel
+	cl::Kernel kernel(program, "ex1"); // kernel "mul42" in file "mul42.cl"
+	kernel.setArg(0, dataAlpha);
+	kernel.setArg(1, dataX);
+	queue.enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(dataSize), cl::NullRange);
+	// no offset, global size == dataSize, local size == 1
+	queue.finish();
+	
+	// read results from buffers
+	dataZ = queue.enqueueReadBuffer(outputBuffer, true, 0, dataFullSize, outputData.data());
+        
+    
 
     double time = chrono.elapsed();
     std::cout << "Time: " << time << " s" << std::endl;
